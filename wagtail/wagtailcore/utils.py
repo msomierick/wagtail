@@ -14,9 +14,9 @@ from django.utils.text import slugify
 WAGTAIL_APPEND_SLASH = getattr(settings, 'WAGTAIL_APPEND_SLASH', True)
 
 
-def camelcase_to_underscore(str):
+def camelcase_to_underscore(input_string):
     # http://djangosnippets.org/snippets/585/
-    return re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', str).lower().strip('_')
+    return re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', input_string).lower().strip('_')
 
 
 def resolve_model_string(model_string, default_app=None):
