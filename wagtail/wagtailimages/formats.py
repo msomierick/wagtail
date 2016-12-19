@@ -47,11 +47,11 @@ FORMATS = []
 FORMATS_BY_NAME = {}
 
 
-def register_image_format(format):
-    if format.name in FORMATS_BY_NAME:
-        raise KeyError("Image format '%s' is already registered" % format.name)
-    FORMATS_BY_NAME[format.name] = format
-    FORMATS.append(format)
+def register_image_format(image_format):
+    if image_format.name in FORMATS_BY_NAME:
+        raise KeyError("Image format '%s' is already registered" % image_format.name)
+    FORMATS_BY_NAME[image_format.name] = image_format
+    FORMATS.append(image_format)
 
 
 def unregister_image_format(format_name):
