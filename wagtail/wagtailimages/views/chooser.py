@@ -160,22 +160,22 @@ def chooser_select_format(request, image_id):
         form = ImageInsertionForm(request.POST, initial={'alt_text': image.default_alt_text})
         if form.is_valid():
 
-            format = get_image_format(form.cleaned_data['format'])
-            preview_image = image.get_rendition(format.filter_spec)
+            image_format = get_image_format(form.cleaned_data['format'])
+            preview_image = image.get_rendition(image_format.filter_spec)
 
             image_json = json.dumps({
                 'id': image.id,
                 'title': image.title,
-                'format': format.name,
+                'format': image_format.name,
                 'alt': form.cleaned_data['alt_text'],
-                'class': format.classnames,
+                'class': image_format.classnames,
                 'edit_link': reverse('wagtailimages:edit', args=(image.id,)),
                 'preview': {
                     'url': preview_image.url,
                     'width': preview_image.width,
                     'height': preview_image.height,
                 },
-                'html': format.image_to_editor_html(image, form.cleaned_data['alt_text']),
+                'html': image_format.image_to_editor_html(image, form.cleaned_data['alt_text']),
             })
 
             return render_modal_workflow(
