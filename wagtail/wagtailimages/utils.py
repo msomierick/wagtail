@@ -35,7 +35,7 @@ def get_fill_filter_spec_migrations(app_name, rendition_model_name):
                 break
 
             for filter_spec in unmatched_filter_specs:
-                filter, _ = Filter.objects.using(db_alias).get_or_create(spec=filter_spec)
-                Rendition.objects.using(db_alias).filter(filter_spec=filter_spec).update(filter=filter)
+                image_filter, _ = Filter.objects.using(db_alias).get_or_create(spec=filter_spec)
+                Rendition.objects.using(db_alias).filter(filter_spec=filter_spec).update(filter=image_filter)
 
     return (fill_filter_spec_forward, fill_filter_spec_reverse)

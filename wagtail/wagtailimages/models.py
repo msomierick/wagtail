@@ -267,21 +267,21 @@ class AbstractImage(CollectionMember, index.Indexed, models.Model):
         else:
             return cls.renditions.related.related_model
 
-    def get_rendition(self, filter):
-        if isinstance(filter, string_types):
-            filter = Filter(spec=filter)
+    def get_rendition(self, image_filter):
+        if isinstance(image_filter, string_types):
+            image_filter = Filter(spec=image_filter)
 
-        cache_key = filter.get_cache_key(self)
+        cache_key = image_filter.get_cache_key(self)
         Rendition = self.get_rendition_model()
 
         try:
             rendition = self.renditions.get(
-                filter_spec=filter.spec,
+                filter_spec=image_filter.spec,
                 focal_point_key=cache_key,
             )
         except Rendition.DoesNotExist:
             # Generate the rendition image
-            generated_image = filter.run(self, BytesIO())
+            generated_image = image_filter.run(self, BytesIO())
 
             # Generate filename
             input_filename = os.path.basename(self.file.name)
@@ -294,7 +294,7 @@ class AbstractImage(CollectionMember, index.Indexed, models.Model):
                 'gif': '.gif',
             }
 
-            output_extension = filter.spec.replace('|', '.') + FORMAT_EXTENSIONS[generated_image.format_name]
+            output_extension = image_filter.spec.replace('|', '.') + FORMAT_EXTENSIONS[generated_image.format_name]
             if cache_key:
                 output_extension = cache_key + '.' + output_extension
 
@@ -303,7 +303,7 @@ class AbstractImage(CollectionMember, index.Indexed, models.Model):
             output_filename = output_filename_without_extension + '.' + output_extension
 
             rendition, created = self.renditions.get_or_create(
-                filter_spec=filter.spec,
+                filter_spec=image_filter.spec,
                 focal_point_key=cache_key,
                 defaults={'file': File(generated_image.f, name=output_filename)}
             )
